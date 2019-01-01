@@ -8,7 +8,7 @@ import way
 import random
 from tqdm import tqdm
 
-model, epoch = MyKeras.load_latest_model('main')
+model, epoch = MyKeras.load_latest_model('models/main')
 
 vidcap = cv2.VideoCapture('video/1.mp4')
 total = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))

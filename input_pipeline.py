@@ -1,19 +1,16 @@
 from generator import get_files, Img2ImgGenerator
 import os
 
-# BDD100K = "H:/Dataset/bdd100k"
-BDD100K = "/mnt/hdd/Dataset/bdd100k"
-
-def get_generators(batch_size):
+def get_generators(batch_size, dataset_path):
     x_train_files = []
-    y_train_files = get_files(BDD100K + '/drivable_maps/labels/train/*.png')
+    y_train_files = get_files(dataset_path + '/drivable_maps/labels/train/*.png')
 
     x_valid_files = []
-    y_valid_files = get_files(BDD100K + '/drivable_maps/labels/val/*.png')
+    y_valid_files = get_files(dataset_path + '/drivable_maps/labels/val/*.png')
 
     for file in y_train_files:
         id = file.replace('\\', '/').split('/')[-1].split('_')[0]
-        x_file = BDD100K + '/images/100k/train/' + id + '.jpg'
+        x_file = dataset_path + '/images/100k/train/' + id + '.jpg'
 
         if not os.path.exists(x_file):
             print('Not exist ', x_file)
@@ -24,7 +21,7 @@ def get_generators(batch_size):
 
     for file in y_valid_files:
         id = file.replace('\\', '/').split('/')[-1].split('_')[0]
-        x_file = BDD100K + '/images/100k/val/' + id + '.jpg'
+        x_file = dataset_path + '/images/100k/val/' + id + '.jpg'
 
         if not os.path.exists(x_file):
             print('Not exist ', x_file)
@@ -44,7 +41,7 @@ def get_generators(batch_size):
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
-    train, valid = get_generators(1)
+    train, valid = get_generators(1, 'H:/Dataset/bdd100k')
 
     for x, y in train:
         plt.imshow(x[0])

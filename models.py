@@ -2,7 +2,6 @@ import keras
 from keras import layers as L
 from keras import Model, Sequential
 import tensorflow as tf
-from keras.layers import TimeDistributed as Dist
 
 def build_model():
     ch = 32

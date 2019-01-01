@@ -1,12 +1,14 @@
 def fit_model(model, train_generator, valid_generator, initial_epoch=0,
-              epochs=100, model_name='main', train_steps=None, valid_steps=None):
+              epochs=100, model_save_dir='models/main', log_dir='logs/main',
+              train_steps=None, valid_steps=None):
     """
     fit model with generator and save checkpoint
     :param model: keras model
     :param train_generator: generator with __getitem__, __len__
     :param valid_generator: generator with __getitem__, __len__
     :param epochs: epochs
-    :param model_name: model name to save
+    :param model_save_dir: model directory to save
+    :param log_dir: log directory to save
     :param train_steps: None is len(train_generator)
     :param valid_steps: None is len(valid_generator)
     :return: trained model
@@ -15,13 +17,10 @@ def fit_model(model, train_generator, valid_generator, initial_epoch=0,
     import os
     import keras
 
-    model_dir = './models/{}'.format(model_name)
-    log_dir=  './logs/{}'.format(model_name)
-
-    os.makedirs(model_dir, exist_ok=True)
+    os.makedirs(model_save_dir, exist_ok=True)
     os.makedirs(log_dir, exist_ok=True)
 
-    checkpoint_path = model_dir + '/model.{epoch:02d}-{val_acc:.3f}.h5'
+    checkpoint_path = model_save_dir + '/model.{epoch:02d}-{val_acc:.3f}.h5'
     checkpoint = keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_acc', save_best_only=False, mode='auto',
                                                  save_weights_only=False)
     tb = keras.callbacks.TensorBoard(log_dir=log_dir)
@@ -42,10 +41,10 @@ def fit_model(model, train_generator, valid_generator, initial_epoch=0,
 
     return model
 
-def load_latest_model(model_name='main'):
+def load_latest_model(model_load_dir='models/main'):
     """
     Load latest saved model. Model must be saved like "model.01-0.98.h5".
-    :param model_name: Saved model's name
+    :param model_load_dir: Saved model's directory
     :return: model, epoch
     """
 
@@ -59,13 +58,11 @@ def load_latest_model(model_name='main'):
     config.gpu_options.allow_growth = True
     set_session(tf.Session(config=config))
 
-    model_dir = './models/{}'.format(model_name)
-
     # model.99-0.98.h5
-    files = glob.glob(model_dir + '/model.*.h5')
+    files = glob.glob(model_load_dir + '/model.*.h5')
 
     if len(files) == 0:
-        raise Exception('Trained model not found from ' + model_dir + '/model.*.h5')
+        raise Exception('Trained model not found from ' + model_load_dir + '/model.*.h5')
 
     last_file = max(files, key=os.path.getctime)
 
