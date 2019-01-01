@@ -1,5 +1,7 @@
 # RoadDetector
 
+![](animation.gif)
+
 http://bdd-data.berkeley.edu/
 
 Trained U-Net based Keras model on Drivable Map dataset.
